@@ -15,7 +15,7 @@ public class BeanConfig {
         ModelMapper modelMapper = new ModelMapper();
 
         modelMapper.typeMap(AppUser.class, UserProfileResponse.class).addMappings(mapper -> {
-            mapper.map(AppUser::getUserId,   UserProfileResponse::setUserId);
+            mapper.map(AppUser::getAppUserId,   UserProfileResponse::setUserId);
             mapper.map(AppUser::getActualUsername, UserProfileResponse::setUsername);
         });
 
