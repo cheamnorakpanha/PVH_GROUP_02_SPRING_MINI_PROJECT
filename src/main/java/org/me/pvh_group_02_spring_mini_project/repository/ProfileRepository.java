@@ -5,7 +5,6 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
 import org.me.pvh_group_02_spring_mini_project.model.entity.AppUser;
-import org.me.pvh_group_02_spring_mini_project.model.response.UserProfileResponse;
 
 @Mapper
 public interface ProfileRepository {
@@ -16,7 +15,7 @@ public interface ProfileRepository {
             @Result(property = "password",       column = "password"),
             @Result(property = "level",          column = "level"),
             @Result(property = "xp",             column = "xp"),
-            @Result(property = "profileImageUrl",column = "profile_image_url"),
+            @Result(property = "profileImageUrl",column = "profile_image"),
             @Result(property = "isVerified",     column = "is_verified"),
             @Result(property = "createdAt",      column = "created_at")
     })

@@ -16,7 +16,6 @@ public class AppUserResponse {
     private UUID appUserId;
     private String userName;
     private String email;
-    private String password;
     private Integer level;
     private Integer xp;
     private String profileImageUrl;
