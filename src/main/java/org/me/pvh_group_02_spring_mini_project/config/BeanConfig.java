@@ -1,7 +1,7 @@
 package org.me.pvh_group_02_spring_mini_project.config;
 
 import org.me.pvh_group_02_spring_mini_project.model.entity.AppUser;
-import org.me.pvh_group_02_spring_mini_project.model.response.UserProfileResponse;
+import org.me.pvh_group_02_spring_mini_project.model.response.AppUserResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +14,10 @@ public class BeanConfig {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
 
-        modelMapper.typeMap(AppUser.class, UserProfileResponse.class).addMappings(mapper -> {
-            mapper.map(AppUser::getAppUserId,   UserProfileResponse::setUserId);
-            mapper.map(AppUser::getActualUsername, UserProfileResponse::setUsername);
+        modelMapper.typeMap(AppUser.class, AppUserResponse.class).addMappings(mapper -> {
+            mapper.map(AppUser::getAppUserId,          AppUserResponse::setAppUserId);
+            mapper.map(AppUser::getRealUserName,  AppUserResponse::setUserName);
+            mapper.map(AppUser::getProfileImageUrl, AppUserResponse::setProfileImageUrl);
         });
 
         return modelMapper;
