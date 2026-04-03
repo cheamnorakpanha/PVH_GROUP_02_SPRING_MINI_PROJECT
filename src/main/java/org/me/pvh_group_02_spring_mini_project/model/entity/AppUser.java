@@ -1,5 +1,6 @@
 package org.me.pvh_group_02_spring_mini_project.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,4 +43,20 @@ public class AppUser implements UserDetails {
     public String getUsername() {
         return email;
     }
+
+    public String getActualUsername() {
+        return userName;
+    }
+
+//    @Override
+//    public boolean isAccountNonExpired() { return true; }
+//
+//    @Override
+//    public boolean isAccountNonLocked() { return true; }
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() { return true; }
+//
+//    @Override
+//    public boolean isEnabled() { return true; }
 }
