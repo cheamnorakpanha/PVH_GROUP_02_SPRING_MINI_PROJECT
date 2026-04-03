@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EditUserProfileRequest {
-    @NotBlank(message = "must not be blank")
+    @NotBlank(message = "User name must not be blank")
     @NotNull
     private String userName;
-
+    @NotBlank(message = "Image url must not be blank")
     private String profileImageUrl;
 }

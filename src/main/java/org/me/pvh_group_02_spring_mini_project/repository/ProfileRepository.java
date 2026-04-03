@@ -23,4 +23,9 @@ public interface ProfileRepository {
     UPDATE app_users set username = #{req.userName}, profile_image = #{req.profileImageUrl} WHERE email = #{email} RETURNING *
     """)
     AppUserResponse updateUserProfile(String email, @Param("req") EditUserProfileRequest editRequest);
+
+    @Delete("""
+    DELETE FROM app_users WHERE email = #{email}
+    """)
+    void deleteUserProfile(String email);
 }

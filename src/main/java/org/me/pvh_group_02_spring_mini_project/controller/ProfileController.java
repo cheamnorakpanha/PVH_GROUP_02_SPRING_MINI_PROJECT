@@ -44,4 +44,15 @@ public class ProfileController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+    @DeleteMapping()
+    public ResponseEntity<ApiResponse<Void>> deleteUserProfile(){
+        profileService.deleteUserProfile();
+        ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .success(true)
+                .message("User profile deleted successfully!")
+                .status(HttpStatus.OK)
+                .timestamp(Instant.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

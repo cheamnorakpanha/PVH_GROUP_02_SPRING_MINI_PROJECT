@@ -1,6 +1,7 @@
 package org.me.pvh_group_02_spring_mini_project.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.me.pvh_group_02_spring_mini_project.exception.NotFoundException;
 import org.me.pvh_group_02_spring_mini_project.model.entity.AppUser;
 import org.me.pvh_group_02_spring_mini_project.model.request.EditUserProfileRequest;
 import org.me.pvh_group_02_spring_mini_project.model.response.AppUserResponse;
@@ -25,6 +26,9 @@ public class ProfileServiceImpl implements ProfileService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         AppUser user = appUserRepository.getUserByEmail(email);
+        if (user == null) {
+            throw new NotFoundException("User not found with email: " + email);
+        }
         return modelMapper.map(user, AppUserResponse.class);
     }
 
@@ -32,6 +36,23 @@ public class ProfileServiceImpl implements ProfileService {
     public AppUserResponse updateUserProfile(EditUserProfileRequest editRequest) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
+        AppUser user = appUserRepository.getUserByEmail(email);
+
+        if (user == null) {
+            throw new NotFoundException("User not found with email: " + email);
+        }
         return  profileRepository.updateUserProfile(email, editRequest);
+    }
+
+    @Override
+    public void deleteUserProfile() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        AppUser user = appUserRepository.getUserByEmail(email);
+
+        if (user == null) {
+            throw new NotFoundException("User not found with email: " + email);
+        }
+        profileRepository.deleteUserProfile(email);
     }
 }

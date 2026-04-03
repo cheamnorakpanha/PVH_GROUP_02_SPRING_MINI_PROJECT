@@ -7,4 +7,6 @@ public interface ProfileService {
     AppUserResponse getUserProfile();
 
     AppUserResponse updateUserProfile(EditUserProfileRequest editRequest);
+
+    void deleteUserProfile();
 }
