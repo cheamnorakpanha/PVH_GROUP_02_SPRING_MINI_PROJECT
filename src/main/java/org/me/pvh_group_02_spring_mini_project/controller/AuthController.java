@@ -1,5 +1,6 @@
 package org.me.pvh_group_02_spring_mini_project.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.me.pvh_group_02_spring_mini_project.jwt.JwtService;
@@ -26,9 +27,11 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class AuthController {
 
+    private final AppUser appUser;
     private final AppUserService appUserService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+
 
     private void authenticate(String email, String password) throws Exception {
         try {
@@ -39,11 +42,19 @@ public class AuthController {
             throw new Exception("INVALID_CREDENTIALS", e);
         }
     }
-
+    @Operation(summary = "User Login")
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> authenticate(@RequestBody AuthRequest request) throws Exception{
+    public ResponseEntity<ApiResponse<AuthResponse>> authenticate(@RequestBody @Valid AuthRequest request) throws Exception{
+
         authenticate(request.getEmail(), request.getPassword());
         final UserDetails userDetails = appUserService.loadUserByUsername(request.getEmail());
+
+        AppUser user = (AppUser) userDetails;
+
+        if (!user.isVerified()) {
+            throw new DisabledException("Account is not verified. Please verify first.");
+        }
+
         final String token = jwtService.generateToken(userDetails);
         AuthResponse authResponse = new AuthResponse(token);
         ApiResponse<AuthResponse> apiResponse = ApiResponse.<AuthResponse>builder()
@@ -55,17 +66,50 @@ public class AuthController {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
-
+    @Operation(summary = "Register a new user")
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AppUserResponse>> register(@RequestBody @Valid AppUserRequest request){
-        ApiResponse<AppUserResponse> apiResponse = ApiResponse.<AppUserResponse>builder()
+        String email = request.getEmail();
+
+        boolean result = appUserService.getOtp(email);
+        if (result) {
+            ApiResponse<AppUserResponse> apiResponse = ApiResponse.<AppUserResponse>builder()
+                    .success(true)
+                    .message("User registered successfully! Please verify your email to complete the registration.")
+                    .status(HttpStatus.CREATED)
+                    .payload(appUserService.register(request))
+                    .timestamp(Instant.now())
+                    .build();
+            return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+        }
+        return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+    @Operation(summary = "Verify email with OTP")
+    @PostMapping("/verify-otp")
+    public ResponseEntity<ApiResponse<AppUser>> verifyOtp(@RequestParam String email,
+                                       @RequestParam String otp) {
+        appUserService.authenticate(email, otp);
+        ApiResponse<AppUser> apiResponse = ApiResponse.<AppUser>builder()
                 .success(true)
-                .message("User registered successfully! Please verifiy your email to complete the registration.")
-                .status(HttpStatus.CREATED)
-                .payload(appUserService.register(request))
+                .message("Email successfully verified! You can now log in")
+                .status(HttpStatus.OK)
+                .payload(null)
                 .timestamp(Instant.now())
                 .build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+    @Operation(summary = "Resend verification OTP")
+    @PostMapping("/resend")
+    public ResponseEntity<ApiResponse<Void>> resend(@RequestParam String email) {
+        appUserService.getOtp(email);
+            ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
+                    .success(true)
+                    .message("Verification OTP successfully resent to your email.")
+                    .status(HttpStatus.CREATED)
+                    .payload(null)
+                    .timestamp(Instant.now())
+                    .build();
+            return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
     }
 
 }

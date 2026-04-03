@@ -54,7 +54,7 @@ public class GlobalException {
     public ProblemDetail handleBadRequestException(BadRequestException b) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         Map<String, String> errors = new HashMap<>();
-        errors.put("eventDate", b.getMessage());
+        errors.put("detail", b.getMessage());
         problemDetail.setTitle("Bad Request");
         problemDetail.setProperty("errors", errors);
         problemDetail.setProperty("timestamp", Instant.now());
