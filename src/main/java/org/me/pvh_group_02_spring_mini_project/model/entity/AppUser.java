@@ -1,5 +1,6 @@
 package org.me.pvh_group_02_spring_mini_project.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,6 +43,10 @@ public class AppUser implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public String getActualUsername() {
+        return userName;
     }
 
 //    @Override
