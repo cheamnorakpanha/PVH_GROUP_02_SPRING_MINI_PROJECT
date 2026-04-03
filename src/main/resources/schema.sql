@@ -1,7 +1,7 @@
 
 CREATE TABLE IF NOT EXISTS app_users(
-                                        app_user_id   UUID PRIMARY KEY,
-                                        username VARCHAR(40) NOT NULL,
+    app_user_id   UUID PRIMARY KEY,
+    username VARCHAR(40) NOT NULL,
     email VARCHAR(40) NOT NULL,
     password  VARCHAR(255) NOT NULL,
     level INT NOT NULL,
