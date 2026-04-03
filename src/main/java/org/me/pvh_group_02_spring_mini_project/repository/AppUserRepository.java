@@ -38,7 +38,7 @@ public interface AppUserRepository {
     @ResultMap("appUserMapper")
     AppUser register(@Param("request") AppUserRequest request);
 
-
+    @ResultMap("appUserMapper")
     @Select("""
         SELECT * FROM app_users WHERE app_user_id = #{appUserId}
     """)
@@ -54,4 +54,11 @@ public interface AppUserRepository {
         SELECT EXISTS(SELECT 1 FROM app_users WHERE username = #{userName})
     """)
     boolean existsUserName(@NotBlank(message = "must not be blank") @NotNull String userName);
+
+    @Update("""
+        UPDATE app_users
+                SET is_verified = true
+                WHERE email = #{email}
+    """)
+    void verifyUser(String email);
 }
