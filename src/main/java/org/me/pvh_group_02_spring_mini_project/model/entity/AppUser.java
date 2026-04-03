@@ -19,8 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @NullMarked
 public class AppUser implements UserDetails {
-
-    private UUID userId;
+    private UUID appUserId;
     private String userName;
     private String email;
     private String password;

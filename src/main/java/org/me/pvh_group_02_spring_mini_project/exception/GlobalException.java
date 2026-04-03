@@ -40,6 +40,15 @@ public class GlobalException {
         return problemDetail;
     }
 
+    @ExceptionHandler(DuplicateUserException.class)
+    public ProblemDetail handleDuplicateUser(DuplicateUserException e) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
+        problemDetail.setTitle("Conflict");
+        problemDetail.setType(URI.create("http://localhost:8090/errors/duplicate-user"));
+        problemDetail.setProperty("timestamp", Instant.now());
+        return problemDetail;
+    }
+
     @ExceptionHandler(BadRequestException.class)
     public ProblemDetail handleBadRequestException(BadRequestException b) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);

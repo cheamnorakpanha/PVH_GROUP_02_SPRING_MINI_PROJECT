@@ -1,10 +1,13 @@
 package org.me.pvh_group_02_spring_mini_project.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.me.pvh_group_02_spring_mini_project.jwt.JwtService;
 import org.me.pvh_group_02_spring_mini_project.model.entity.AppUser;
+import org.me.pvh_group_02_spring_mini_project.model.request.AppUserRequest;
 import org.me.pvh_group_02_spring_mini_project.model.request.AuthRequest;
 import org.me.pvh_group_02_spring_mini_project.model.response.ApiResponse;
+import org.me.pvh_group_02_spring_mini_project.model.response.AppUserResponse;
 import org.me.pvh_group_02_spring_mini_project.model.response.AuthResponse;
 import org.me.pvh_group_02_spring_mini_project.service.AppUserService;
 import org.springframework.http.HttpStatus;
@@ -52,4 +55,17 @@ public class AuthController {
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<AppUserResponse>> register(@RequestBody @Valid AppUserRequest request){
+        ApiResponse<AppUserResponse> apiResponse = ApiResponse.<AppUserResponse>builder()
+                .success(true)
+                .message("User registered successfully! Please verifiy your email to complete the registration.")
+                .status(HttpStatus.CREATED)
+                .payload(appUserService.register(request))
+                .timestamp(Instant.now())
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+    }
+
 }

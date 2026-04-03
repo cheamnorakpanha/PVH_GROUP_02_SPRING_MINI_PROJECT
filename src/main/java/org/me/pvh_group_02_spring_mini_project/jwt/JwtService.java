@@ -43,7 +43,7 @@ public class JwtService {
         Map<String, Object> claims = new HashMap<>();
         AppUser appUser = (AppUser) userDetails;
         claims.put(
-                "userId", appUser.getUserId() // pass userId as an extra claim
+                "userId", appUser.getAppUserId() // pass userId as an extra claim
         );
         return createToken(claims, userDetails.getUsername());
     }
