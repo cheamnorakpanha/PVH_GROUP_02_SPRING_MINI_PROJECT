@@ -10,7 +10,7 @@ import org.me.pvh_group_02_spring_mini_project.model.response.UserProfileRespons
 @Mapper
 public interface ProfileRepository {
     @Results(id = "profileUserMapper", value = {
-            @Result(property = "userId", column = "app_user_id"),
+            @Result(property = "appUserId", column = "app_user_id"),
             @Result(property = "userName", column = "username"),
             @Result(property = "email", column = "email"),
             @Result(property = "password",       column = "password"),
