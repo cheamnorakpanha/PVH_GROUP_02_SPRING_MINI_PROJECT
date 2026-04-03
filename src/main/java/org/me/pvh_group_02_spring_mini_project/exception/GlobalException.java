@@ -1,13 +1,14 @@
 package org.me.pvh_group_02_spring_mini_project.exception;
 
-import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import org.me.pvh_group_02_spring_mini_project.model.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.net.URI;
 import java.time.Instant;
@@ -58,6 +59,19 @@ public class GlobalException {
         problemDetail.setProperty("errors", errors);
         problemDetail.setProperty("timestamp", Instant.now());
         return problemDetail;
+    }
+
+    //Handle Exception for FileNotFound
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex, HttpServletRequest request) {
+        ErrorResponse error = ErrorResponse.builder()
+                .status(HttpStatus.UNAUTHORIZED.value())
+                .error("UNAUTHORIZED")
+                .message("Authentication required or token is invalid")
+                .path("/error")
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 }
 
