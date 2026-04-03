@@ -44,4 +44,7 @@ public class AppUser implements UserDetails {
         return email;
     }
 
+    public String getRealUserName() {
+        return userName;
+    }
 }

@@ -2,7 +2,9 @@ package org.me.pvh_group_02_spring_mini_project.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.me.pvh_group_02_spring_mini_project.model.entity.AppUser;
+import org.me.pvh_group_02_spring_mini_project.model.request.EditUserProfileRequest;
 import org.me.pvh_group_02_spring_mini_project.model.response.AppUserResponse;
+import org.me.pvh_group_02_spring_mini_project.repository.AppUserRepository;
 import org.me.pvh_group_02_spring_mini_project.repository.ProfileRepository;
 import org.me.pvh_group_02_spring_mini_project.service.ProfileService;
 import org.modelmapper.ModelMapper;
@@ -16,12 +18,20 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final ProfileRepository profileRepository;
     private final ModelMapper modelMapper;
+    private final AppUserRepository appUserRepository;
 
     @Override
     public AppUserResponse getUserProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        AppUser user = profileRepository.findUserByEmail(email);
+        AppUser user = appUserRepository.getUserByEmail(email);
         return modelMapper.map(user, AppUserResponse.class);
+    }
+
+    @Override
+    public AppUserResponse updateUserProfile(EditUserProfileRequest editRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return  profileRepository.updateUserProfile(email, editRequest);
     }
 }
