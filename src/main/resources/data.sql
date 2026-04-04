@@ -8,4 +8,5 @@ VALUES (gen_random_uuid(), 'Evening Walk', 'Walk for 30 minutes in the evening',
         '495a0683-8216-4ee3-8f09-94b6b4d6bb58'),
        (gen_random_uuid(), 'Practice English', 'Spend 20 minutes improving English skills', 'daily', true,
         '495a0683-8216-4ee3-8f09-94b6b4d6bb58');
-TRUNCATE TABLE app_users CASCADE ;
+
+TRUNCATE TABLE app_users CASCADE;

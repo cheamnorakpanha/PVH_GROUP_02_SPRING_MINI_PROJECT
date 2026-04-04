@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import org.apache.ibatis.annotations.*;
 import org.me.pvh_group_02_spring_mini_project.model.entity.AppUser;
 import org.me.pvh_group_02_spring_mini_project.model.request.AppUserRequest;
+import org.me.pvh_group_02_spring_mini_project.model.response.AppUserResponse;
 import org.me.pvh_group_02_spring_mini_project.utils.TypeHandlerUUID;
 
 import java.util.UUID;
@@ -43,6 +44,18 @@ public interface AppUserRepository {
         SELECT * FROM app_users WHERE app_user_id = #{appUserId}
     """)
     AppUser getUserById(UUID appUserId);
+
+    @Results(id = "appUserResponseMapper", value = {
+            @Result(property = "appUserId", column = "app_user_id", typeHandler = TypeHandlerUUID.class),
+            @Result(property = "userName", column = "username"),
+            @Result(property = "profileImageUrl", column = "profile_image"),
+            @Result(property = "isVerified", column = "is_verified"),
+            @Result(property = "createdAt", column = "created_at")
+    })
+    @Select("""
+        SELECT * FROM app_users WHERE app_user_id = #{appUserId}
+    """)
+    AppUserResponse getUserResponseById(@Param("appUserId") UUID appUserId);
 
 
     @Select("""
