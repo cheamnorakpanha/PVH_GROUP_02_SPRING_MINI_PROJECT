@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import org.apache.ibatis.annotations.*;
 import org.me.pvh_group_02_spring_mini_project.model.entity.AppUser;
 import org.me.pvh_group_02_spring_mini_project.model.request.AppUserRequest;
+import org.me.pvh_group_02_spring_mini_project.model.response.AppUserResponse;
 import org.me.pvh_group_02_spring_mini_project.utils.TypeHandlerUUID;
 
 import java.util.UUID;
@@ -38,11 +39,23 @@ public interface AppUserRepository {
     @ResultMap("appUserMapper")
     AppUser register(@Param("request") AppUserRequest request);
 
-
+    @ResultMap("appUserMapper")
     @Select("""
         SELECT * FROM app_users WHERE app_user_id = #{appUserId}
     """)
     AppUser getUserById(UUID appUserId);
+
+    @Results(id = "appUserResponseMapper", value = {
+            @Result(property = "appUserId", column = "app_user_id", typeHandler = TypeHandlerUUID.class),
+            @Result(property = "userName", column = "username"),
+            @Result(property = "profileImageUrl", column = "profile_image"),
+            @Result(property = "isVerified", column = "is_verified"),
+            @Result(property = "createdAt", column = "created_at")
+    })
+    @Select("""
+        SELECT * FROM app_users WHERE app_user_id = #{appUserId}
+    """)
+    AppUserResponse getUserResponseById(@Param("appUserId") UUID appUserId);
 
 
     @Select("""
@@ -57,10 +70,28 @@ public interface AppUserRepository {
 
     @Update("""
         UPDATE app_users
+                SET is_verified = true
+                WHERE email = #{email}
+    """)
+    void verifyUser(String email);
+
+    AppUser getUserByEmailOr(String email);
+
+
+    @ResultMap("appUserMapper")
+    @Select("""
+    SELECT * FROM app_users 
+    WHERE email = #{identifier} OR username = #{identifier} 
+    LIMIT 1
+    """)
+    AppUser getUserByEmailOrUsername(@Param("identifier") String identifier);
+    @Update("""
+        UPDATE app_users
         SET xp = #{xp}, level = #{level}
         WHERE app_user_id = #{appUserId}
     """)
     void updateUserXpAndLevel(@Param("appUserId") UUID appUserId,
                               @Param("xp") Integer xp,
                               @Param("level") Integer level);
+
 }

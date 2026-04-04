@@ -13,6 +13,17 @@ public interface HabitLogRepository {
             "VALUES (#{habitLogId}, #{logDate}, #{status}, #{xpEarned}, #{habitId})")
     void insertHabitLog(HabitLog habitLog);
 
+    @Results(id = "habitLogMapper", value = {
+            @Result(property = "habitLogId", column = "habit_log_id"),
+            @Result(property = "logDate", column = "log_date"),
+            @Result(property = "xpEarned", column = "xp_earned"),
+            @Result(property = "habitId", column = "habit_id"),
+            @Result(
+                    property = "habit",
+                    column = "habit_id",
+                    one = @One(select = "org.me.pvh_group_02_spring_mini_project.repository.HabitRepository.getHabitById")
+            )
+    })
     @Select("SELECT * FROM habit_logs WHERE habit_id = #{habitId} ORDER BY log_date DESC LIMIT #{size} OFFSET #{offset}")
     List<HabitLog> findByHabitId(@Param("habitId") UUID habitId,
                                  @Param("size") Integer size,

@@ -1,5 +1,6 @@
 package org.me.pvh_group_02_spring_mini_project.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,7 @@ public class HabitLog {
     private LocalDate logDate;
     private String status;
     private Integer xpEarned;
+    @JsonIgnore
     private UUID habitId;
+    private Habit habit;
 }

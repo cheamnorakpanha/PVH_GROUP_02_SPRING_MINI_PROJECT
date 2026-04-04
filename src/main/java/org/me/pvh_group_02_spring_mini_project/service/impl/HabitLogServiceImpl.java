@@ -47,6 +47,7 @@ public class HabitLogServiceImpl implements HabitLogService {
         log.setXpEarned("COMPLETED".equals(normalizedStatus) ? 10 : 0);
 
         habitLogRepository.insertHabitLog(log);
+        log.setHabit(habit);
 
         // XP & Level logic
         int totalLogs = habitLogRepository.countLogsByUserId(user.getAppUserId());
