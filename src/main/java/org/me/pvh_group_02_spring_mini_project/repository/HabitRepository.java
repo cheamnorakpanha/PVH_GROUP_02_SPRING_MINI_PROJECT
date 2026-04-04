@@ -13,9 +13,13 @@ public interface HabitRepository {
 
     @Results(id = "habitMapper", value = {
             @Result(property = "habitId", column = "habit_id", typeHandler = TypeHandlerUUID.class),
-            @Result(property = "appUserId", column = "app_user_id", typeHandler = TypeHandlerUUID.class),
             @Result(property = "isActive", column = "is_active"),
-            @Result(property = "createdAt", column = "created_at")
+            @Result(property = "createdAt", column = "created_at"),
+            @Result(
+                    property = "appUserResponse",
+                    column = "app_user_id",
+                    one = @One(select = "org.me.pvh_group_02_spring_mini_project.repository.AppUserRepository.getUserResponseById")
+            )
     })
     @Select("""
             SELECT * FROM habits LIMIT #{size} OFFSET #{offset}
@@ -24,9 +28,9 @@ public interface HabitRepository {
 
     @ResultMap("habitMapper")
     @Select("""
-            SELECT * FROM habits WHERE habit_id = #{habit_id}
+            SELECT * FROM habits WHERE habit_id = #{habitId}
             """)
-    List<Habit> getHabitById(UUID habitId);
+    List<Habit> getHabitById(@Param("habitId") UUID habitId);
 
     @ResultMap("habitMapper")
     @Select("""
