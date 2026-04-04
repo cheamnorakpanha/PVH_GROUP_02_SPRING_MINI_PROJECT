@@ -61,4 +61,15 @@ public interface AppUserRepository {
                 WHERE email = #{email}
     """)
     void verifyUser(String email);
+
+    AppUser getUserByEmailOr(String email);
+
+
+    @ResultMap("appUserMapper")
+    @Select("""
+    SELECT * FROM app_users 
+    WHERE email = #{identifier} OR username = #{identifier} 
+    LIMIT 1
+    """)
+    AppUser getUserByEmailOrUsername(@Param("identifier") String identifier);
 }

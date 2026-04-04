@@ -11,5 +11,7 @@ public interface AppUserService extends UserDetailsService {
 
     boolean getOtp(String email);
 
-    boolean authenticate(String email, String otp);
+    void authenticate(String email, String otp);
+
+    void resendOtp(String email);
 }
