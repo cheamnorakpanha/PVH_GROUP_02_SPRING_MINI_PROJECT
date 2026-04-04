@@ -49,7 +49,7 @@ public class AuthController {
         ApiResponse<AuthResponse> apiResponse = ApiResponse.<AuthResponse>builder()
                 .success(true)
                 .message("Login successful! Authentication token generated.")
-                .status(HttpStatus.OK)
+                .status(HttpStatus.OK.name())
                 .payload(authResponse)
                 .timestamp(Instant.now())
                 .build();
@@ -61,7 +61,7 @@ public class AuthController {
         ApiResponse<AppUserResponse> apiResponse = ApiResponse.<AppUserResponse>builder()
                 .success(true)
                 .message("User registered successfully! Please verifiy your email to complete the registration.")
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.CREATED.name())
                 .payload(appUserService.register(request))
                 .timestamp(Instant.now())
                 .build();
@@ -69,3 +69,12 @@ public class AuthController {
     }
 
 }
+
+
+
+
+
+
+
+
+

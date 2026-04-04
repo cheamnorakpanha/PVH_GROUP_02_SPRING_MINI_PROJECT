@@ -54,4 +54,13 @@ public interface AppUserRepository {
         SELECT EXISTS(SELECT 1 FROM app_users WHERE username = #{userName})
     """)
     boolean existsUserName(@NotBlank(message = "must not be blank") @NotNull String userName);
+
+    @Update("""
+        UPDATE app_users
+        SET xp = #{xp}, level = #{level}
+        WHERE app_user_id = #{appUserId}
+    """)
+    void updateUserXpAndLevel(@Param("appUserId") UUID appUserId,
+                              @Param("xp") Integer xp,
+                              @Param("level") Integer level);
 }
