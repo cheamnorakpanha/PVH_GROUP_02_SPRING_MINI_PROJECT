@@ -1,6 +1,7 @@
 package org.me.pvh_group_02_spring_mini_project.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.me.pvh_group_02_spring_mini_project.model.response.ApiResponse;
 import org.me.pvh_group_02_spring_mini_project.model.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -55,11 +56,25 @@ public class GlobalException {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         Map<String, String> errors = new HashMap<>();
         errors.put("detail", b.getMessage());
+        problemDetail.setProperty("type", "about:blank");
         problemDetail.setTitle("Bad Request");
-        problemDetail.setProperty("errors", errors);
+        problemDetail.setDetail(b.getMessage());
+//        problemDetail.setProperty("errors", errors);
         problemDetail.setProperty("timestamp", Instant.now());
         return problemDetail;
     }
+
+//    @ExceptionHandler(BadRequestException.class)
+//    public ResponseEntity<ApiResponse<Void>> handleBadRequestException(BadRequestException e) {
+//        ApiResponse<Void> response = ApiResponse.<Void>builder()
+//                .success(false)
+//                .message(e.getMessage())
+//                .status(HttpStatus.BAD_REQUEST)
+//                .payload(null)
+//                .timestamp(Instant.now())
+//                .build();
+//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//    }
 
     //Handle Exception for FileNotFound
     @ExceptionHandler(RuntimeException.class)
