@@ -54,5 +54,6 @@ public class ProfileServiceImpl implements ProfileService {
         }
 
         profileRepository.deleteUserProfile(user.getEmail());
+        SecurityContextHolder.clearContext();
     }
 }
