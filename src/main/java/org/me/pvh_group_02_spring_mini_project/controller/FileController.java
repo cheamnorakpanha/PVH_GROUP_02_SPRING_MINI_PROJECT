@@ -1,5 +1,6 @@
 package org.me.pvh_group_02_spring_mini_project.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.me.pvh_group_02_spring_mini_project.model.response.ApiResponse;
@@ -29,6 +30,7 @@ public class FileController {
     @Value("${spring.file-upload-path}")
     private String pathName;
 
+    @Operation(summary = "Upload a file")
     @PostMapping(value = "upload-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<FileMetaData>> uploadFile(@RequestParam MultipartFile file) {
         FileMetaData fileMetaData = fileService.uploadFile(file);
@@ -42,6 +44,7 @@ public class FileController {
     }
 
 
+    @Operation(summary = "Preview a file")
     @GetMapping("preview-file/{file-name}")
     public ResponseEntity<Resource> getFileByFileName(@PathVariable("file-name") String fileName) {
         Resource resource = fileService.getFileByFileName(fileName);
