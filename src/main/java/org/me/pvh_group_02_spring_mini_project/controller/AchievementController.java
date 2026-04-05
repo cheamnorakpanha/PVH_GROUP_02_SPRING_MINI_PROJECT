@@ -31,7 +31,7 @@ public class AchievementController {
         ApiResponse<List<Achievement>> response = ApiResponse.<List<Achievement>>builder()
                 .success(true)
                 .timestamp(Instant.now())
-                .status(HttpStatus.OK)
+                .status(HttpStatus.OK.name())
                 .message("Achievement fetched successfully")
                 .payload(achievements )
                 .build();
@@ -49,7 +49,7 @@ public class AchievementController {
         ApiResponse<List<Achievement>> response = ApiResponse.<List<Achievement>>builder()
                 .success(true)
                 .timestamp(Instant.now())
-                .status(HttpStatus.OK)
+                .status(HttpStatus.OK.name())
                 .message("Achievements for the specified App User retrieved successfully!")
                 .payload(achievements )
                 .build();

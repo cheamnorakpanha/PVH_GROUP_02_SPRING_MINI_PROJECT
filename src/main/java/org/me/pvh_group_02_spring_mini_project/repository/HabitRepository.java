@@ -15,6 +15,7 @@ public interface HabitRepository {
             @Result(property = "habitId", column = "habit_id", typeHandler = TypeHandlerUUID.class),
             @Result(property = "isActive", column = "is_active"),
             @Result(property = "createdAt", column = "created_at"),
+            @Result(property = "appUserId", column = "app_user_id", typeHandler = TypeHandlerUUID.class),
             @Result(
                     property = "appUserResponse",
                     column = "app_user_id",

@@ -28,7 +28,7 @@ public class HabitController {
         ApiResponse<List<Habit>> response = ApiResponse.<List<Habit>>builder()
                 .success(true)
                 .message("Fetched all habits successfully!")
-                .status(HttpStatus.OK)
+                .status(HttpStatus.OK.name())
                 .payload(habitService.getAllHabits(page, size))
                 .timestamp(Instant.now())
                 .build();
@@ -42,7 +42,7 @@ public class HabitController {
         ApiResponse<List<Habit>> response = ApiResponse.<List<Habit>>builder()
                 .success(true)
                 .message("Habit fetched successfully!")
-                .status(HttpStatus.OK)
+                .status(HttpStatus.OK.name())
                 .payload(habitService.getHabitById(habitId))
                 .timestamp(Instant.now())
                 .build();
@@ -56,7 +56,7 @@ public class HabitController {
         ApiResponse<Habit> response = ApiResponse.<Habit>builder()
                 .success(true)
                 .message("Habit created successfully!")
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.CREATED.name())
                 .payload(habitService.createNewHabit(request))
                 .timestamp(Instant.now())
                 .build();
@@ -70,7 +70,7 @@ public class HabitController {
         ApiResponse<Habit> response = ApiResponse.<Habit>builder()
                 .success(true)
                 .message("Habit updated successfully!")
-                .status(HttpStatus.OK)
+                .status(HttpStatus.OK.name())
                 .payload(habitService.updateHabitById(habitId, request))
                 .timestamp(Instant.now())
                 .build();
@@ -86,10 +86,19 @@ public class HabitController {
         ApiResponse<String> response = ApiResponse.<String>builder()
                 .success(true)
                 .message("Habit deleted successfully!")
-                .status(HttpStatus.OK)
+                .status(HttpStatus.OK.name())
                 .timestamp(Instant.now())
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
+
+
+
+
+
+
+
+
+

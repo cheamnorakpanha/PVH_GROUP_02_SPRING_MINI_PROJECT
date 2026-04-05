@@ -28,7 +28,7 @@ public class ProfileController {
         ApiResponse<AppUserResponse> response = ApiResponse.<AppUserResponse>builder()
                 .success(true)
                 .message("User profile fetched successfully!")
-                .status(HttpStatus.OK)
+                .status(HttpStatus.OK.name())
                 .payload(profileService.getUserProfile())
                 .timestamp(Instant.now())
                 .build();
@@ -42,7 +42,7 @@ public class ProfileController {
         ApiResponse<AppUserResponse> response = ApiResponse.<AppUserResponse>builder()
                 .success(true)
                 .message("User profile updated successfully!")
-                .status(HttpStatus.OK)
+                .status(HttpStatus.OK.name())
                 .payload(user)
                 .timestamp(Instant.now())
                 .build();
@@ -56,9 +56,13 @@ public class ProfileController {
         ApiResponse<Void> response = ApiResponse.<Void>builder()
                 .success(true)
                 .message("User profile deleted successfully!")
-                .status(HttpStatus.OK)
+                .status(HttpStatus.OK.name())
                 .timestamp(Instant.now())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
+
+
+
+
