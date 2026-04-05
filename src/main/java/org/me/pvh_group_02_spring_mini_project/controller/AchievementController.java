@@ -1,6 +1,5 @@
 package org.me.pvh_group_02_spring_mini_project.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.me.pvh_group_02_spring_mini_project.model.entity.Achievement;
 import org.me.pvh_group_02_spring_mini_project.model.entity.AppUser;
@@ -24,22 +23,21 @@ public class AchievementController {
     public AchievementController(AchievementService achievementService) {
         this.achievementService = achievementService;
     }
-    @Operation(summary = "Get all achievements")
     @GetMapping
     public ResponseEntity<ApiResponse<List<Achievement>>> getAllAchievement(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         List<Achievement> achievements = achievementService.getAllAchievement(page, size);
         ApiResponse<List<Achievement>> response = ApiResponse.<List<Achievement>>builder()
                 .success(true)
                 .timestamp(Instant.now())
-                .status(HttpStatus.OK.name())
+                .status(HttpStatus.OK)
                 .message("Achievement fetched successfully")
                 .payload(achievements )
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-    @Operation(summary = "Get achievements By App User ID")
-    @GetMapping("/app-users")
+    @GetMapping("/app-users/{appUserId}")
     public ResponseEntity<ApiResponse<List<Achievement>>> getAchievementByAppUserId(
+
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             Authentication authentication) {
@@ -49,7 +47,7 @@ public class AchievementController {
         ApiResponse<List<Achievement>> response = ApiResponse.<List<Achievement>>builder()
                 .success(true)
                 .timestamp(Instant.now())
-                .status(HttpStatus.OK.name())
+                .status(HttpStatus.OK)
                 .message("Achievements for the specified App User retrieved successfully!")
                 .payload(achievements )
                 .build();
