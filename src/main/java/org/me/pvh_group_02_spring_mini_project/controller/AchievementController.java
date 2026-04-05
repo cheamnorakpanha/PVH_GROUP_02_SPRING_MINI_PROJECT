@@ -39,11 +39,8 @@ public class AchievementController {
     public ResponseEntity<ApiResponse<List<Achievement>>> getAchievementByAppUserId(
 
             @RequestParam(defaultValue = "1") Integer page,
-            @RequestParam(defaultValue = "10") Integer size,
-            Authentication authentication) {
-        AppUser appUser = (AppUser)  authentication.getPrincipal();
-        UUID appUserId = appUser.getAppUserId();
-        List<Achievement> achievements = achievementService.getAchievementByAppUserId( appUserId, page, size);
+            @RequestParam(defaultValue = "10") Integer size) {
+        List<Achievement> achievements = achievementService.getAchievementByAppUserId( page, size);
         ApiResponse<List<Achievement>> response = ApiResponse.<List<Achievement>>builder()
                 .success(true)
                 .timestamp(Instant.now())
