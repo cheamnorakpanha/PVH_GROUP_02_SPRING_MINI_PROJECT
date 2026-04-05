@@ -2,6 +2,7 @@ package org.me.pvh_group_02_spring_mini_project.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.me.pvh_group_02_spring_mini_project.model.entity.Habit;
 import org.me.pvh_group_02_spring_mini_project.model.request.HabitRequest;
@@ -9,12 +10,14 @@ import org.me.pvh_group_02_spring_mini_project.model.response.ApiResponse;
 import org.me.pvh_group_02_spring_mini_project.service.HabitService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+@Validated
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/v1/habits")
@@ -24,7 +27,10 @@ public class HabitController {
 
     @Operation(summary = "Get all habits")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Habit>>> getAllHabits(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<ApiResponse<List<Habit>>> getAllHabits(
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size
+    ) {
         ApiResponse<List<Habit>> response = ApiResponse.<List<Habit>>builder()
                 .success(true)
                 .message("Fetched all habits successfully!")
@@ -52,7 +58,7 @@ public class HabitController {
 
     @Operation(summary = "Create a new habit")
     @PostMapping
-    public ResponseEntity<ApiResponse<Habit>> createNewHabit(@RequestBody HabitRequest request) {
+    public ResponseEntity<ApiResponse<Habit>> createNewHabit(@Valid @RequestBody HabitRequest request) {
         ApiResponse<Habit> response = ApiResponse.<Habit>builder()
                 .success(true)
                 .message("Habit created successfully!")
@@ -66,7 +72,7 @@ public class HabitController {
 
     @Operation(summary = "Update habit by Id")
     @PutMapping("/{habit-id}")
-    public ResponseEntity<ApiResponse<Habit>> updateHabitById(@PathVariable("habit-id") UUID habitId, @RequestBody HabitRequest request) {
+    public ResponseEntity<ApiResponse<Habit>> updateHabitById(@PathVariable("habit-id") UUID habitId,@Valid @RequestBody HabitRequest request) {
         ApiResponse<Habit> response = ApiResponse.<Habit>builder()
                 .success(true)
                 .message("Habit updated successfully!")

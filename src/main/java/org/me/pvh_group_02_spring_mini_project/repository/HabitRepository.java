@@ -54,4 +54,29 @@ public interface HabitRepository {
             WHERE habit_id = #{habitId} AND app_user_id = #{userId}
             """)
     int deleteHabitById(@Param("habitId") UUID habitId, @Param("userId") UUID userId);
+
+    @Select("""
+                SELECT COUNT(*) > 0
+                FROM habits
+                WHERE title = #{title}
+                  AND description = #{description}
+                  AND app_user_id = #{userId}
+            """)
+    boolean existsByTitleAndDescription(
+            @Param("title") String title,
+            @Param("description") String description,
+            @Param("userId") UUID userId
+    );
+
+    @ResultMap("habitMapper")
+    @Select("""
+                SELECT *
+                FROM habits
+                WHERE habit_id = #{habitId}
+                  AND app_user_id = #{userId}
+            """)
+    Habit findByIdAndUserId(
+            @Param("habitId") UUID habitId,
+            @Param("userId") UUID userId
+    );
 }

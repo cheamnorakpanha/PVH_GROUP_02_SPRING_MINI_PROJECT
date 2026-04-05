@@ -1,6 +1,7 @@
 package org.me.pvh_group_02_spring_mini_project.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import org.me.pvh_group_02_spring_mini_project.model.response.ApiResponse;
 import org.me.pvh_group_02_spring_mini_project.model.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -29,15 +30,26 @@ public class GlobalException {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problemDetail.setTitle("Bad Request");
-        Map<String, String> errors = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> handleValidationException(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request
+    ) {
+
+        Map<String, String> errors = new LinkedHashMap<>();
+
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
-        problemDetail.setProperty("errors", errors);
-        return problemDetail;
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("type", "about:blank");
+        response.put("title", "Bad Request");
+        response.put("status", 400);
+        response.put("instance", request.getRequestURI());
+        response.put("errors", errors);
+        response.put("timestamp", Instant.now());
+
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(DuplicateUserException.class)
@@ -55,8 +67,8 @@ public class GlobalException {
         error.put("type", "about:blank");
         error.put("title", "Bad Request");
         error.put("status", 400);
-        error.put("detail", b.getMessage());
         error.put("instance", request.getRequestURI());
+        error.put("errors", b.getErrors());
         error.put("timestamp", Instant.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
@@ -70,5 +82,65 @@ public class GlobalException {
                 .path("/error")
                 .build();
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(
+            ResourceNotFoundException ex,
+            HttpServletRequest request
+    ) {
+
+        Map<String, Object> error = new LinkedHashMap<>();
+
+        error.put("type", "about:blank");
+        error.put("title", "Not Found");
+        error.put("status", 404);
+        error.put("detail", ex.getMessage());
+        error.put("instance", request.getRequestURI());
+        error.put("timestamp", Instant.now());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleConstraintViolation(
+            ConstraintViolationException ex,
+            HttpServletRequest request
+    ) {
+
+        Map<String, String> errors = new LinkedHashMap<>();
+
+        ex.getConstraintViolations().forEach(violation -> {
+            String field = violation.getPropertyPath().toString();
+            String fieldName = field.substring(field.lastIndexOf('.') + 1);
+            errors.put(fieldName, violation.getMessage());
+        });
+
+        Map<String, Object> response = new LinkedHashMap<>();
+        response.put("type", "about:blank");
+        response.put("title", "Bad Request");
+        response.put("status", 400);
+        response.put("instance", request.getRequestURI());
+        response.put("errors", errors);
+        response.put("timestamp", Instant.now());
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(CreateHabitException.class)
+    public ResponseEntity<Map<String, Object>> handleCreateHabitException(
+            CreateHabitException ex,
+            HttpServletRequest request
+    ) {
+
+        Map<String, Object> error = new LinkedHashMap<>();
+        error.put("type", "about:blank");
+        error.put("title", "Bad Request");
+        error.put("status", 400);
+        error.put("instance", request.getRequestURI());
+        error.put("errors", ex.getErrors());
+        error.put("timestamp", Instant.now());
+
+        return ResponseEntity.badRequest().body(error);
     }
 }
