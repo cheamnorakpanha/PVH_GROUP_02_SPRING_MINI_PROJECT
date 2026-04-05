@@ -79,9 +79,9 @@ public class AppUserServiceImpl implements AppUserService {
             throw new BadRequestException("The email address provided is not registered. Please check and try again.");
         }
 
-//        if (user.isVerified()) {
-//            throw new BadRequestException("Account is already verified.");
-//        }
+        if (user.isVerified()) {
+            throw new BadRequestException("Account is already verified.");
+        }
 
         boolean verified = otpService.verifyOtp(email, otp);
         if (!verified) {
