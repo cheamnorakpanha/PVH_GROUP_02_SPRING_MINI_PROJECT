@@ -1,5 +1,6 @@
 package org.me.pvh_group_02_spring_mini_project.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.me.pvh_group_02_spring_mini_project.model.entity.Achievement;
 import org.me.pvh_group_02_spring_mini_project.model.entity.AppUser;
@@ -23,6 +24,7 @@ public class AchievementController {
     public AchievementController(AchievementService achievementService) {
         this.achievementService = achievementService;
     }
+    @Operation(summary = "Get all achievements")
     @GetMapping
     public ResponseEntity<ApiResponse<List<Achievement>>> getAllAchievement(@RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         List<Achievement> achievements = achievementService.getAllAchievement(page, size);
@@ -35,9 +37,9 @@ public class AchievementController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-    @GetMapping("/app-users/{appUserId}")
+    @Operation(summary = "Get achievements By App User ID")
+    @GetMapping("/app-users")
     public ResponseEntity<ApiResponse<List<Achievement>>> getAchievementByAppUserId(
-
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer size,
             Authentication authentication) {
