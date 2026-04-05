@@ -58,7 +58,7 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public boolean getOtp(String email) {
         try {
-            var generatedOtp = otpService.generateOtp();
+            String generatedOtp = otpService.generateOtp();
             log.info("Generated OTP: {}", generatedOtp);
             otpService.sendOtp(email, generatedOtp, 120);
             return true;
