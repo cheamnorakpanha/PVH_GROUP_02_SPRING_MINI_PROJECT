@@ -1,6 +1,5 @@
 package org.me.pvh_group_02_spring_mini_project.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.me.pvh_group_02_spring_mini_project.model.request.EditUserProfileRequest;
@@ -21,48 +20,39 @@ import java.time.Instant;
 public class ProfileController {
     private final ProfileService profileService;
 
-    @Operation(summary = "Get user profile")
     @GetMapping()
     public ResponseEntity<ApiResponse<AppUserResponse>> getUserProfile(){
 
         ApiResponse<AppUserResponse> response = ApiResponse.<AppUserResponse>builder()
                 .success(true)
                 .message("User profile fetched successfully!")
-                .status(HttpStatus.OK.name())
+                .status(HttpStatus.OK)
                 .payload(profileService.getUserProfile())
                 .timestamp(Instant.now())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
-    @Operation(summary = "Update user profile")
     @PutMapping()
     public ResponseEntity<ApiResponse<AppUserResponse>> updateUserProfile(@RequestBody EditUserProfileRequest editRequest){
         AppUserResponse user = profileService.updateUserProfile(editRequest);
         ApiResponse<AppUserResponse> response = ApiResponse.<AppUserResponse>builder()
                 .success(true)
                 .message("User profile updated successfully!")
-                .status(HttpStatus.OK.name())
+                .status(HttpStatus.OK)
                 .payload(user)
                 .timestamp(Instant.now())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
-    @Operation(summary = "Delete user profile")
     @DeleteMapping()
     public ResponseEntity<ApiResponse<Void>> deleteUserProfile(){
         profileService.deleteUserProfile();
         ApiResponse<Void> response = ApiResponse.<Void>builder()
                 .success(true)
                 .message("User profile deleted successfully!")
-                .status(HttpStatus.OK.name())
+                .status(HttpStatus.OK)
                 .timestamp(Instant.now())
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
-
-
-
-

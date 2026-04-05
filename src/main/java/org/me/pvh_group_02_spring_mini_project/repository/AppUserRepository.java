@@ -85,13 +85,4 @@ public interface AppUserRepository {
     LIMIT 1
     """)
     AppUser getUserByEmailOrUsername(@Param("identifier") String identifier);
-    @Update("""
-        UPDATE app_users
-        SET xp = #{xp}, level = #{level}
-        WHERE app_user_id = #{appUserId}
-    """)
-    void updateUserXpAndLevel(@Param("appUserId") UUID appUserId,
-                              @Param("xp") Integer xp,
-                              @Param("level") Integer level);
-
 }
