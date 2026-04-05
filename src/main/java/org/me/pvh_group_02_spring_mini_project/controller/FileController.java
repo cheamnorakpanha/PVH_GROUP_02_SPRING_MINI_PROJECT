@@ -35,7 +35,7 @@ public class FileController {
         ApiResponse<FileMetaData> response = ApiResponse.<FileMetaData>builder()
                 .success(true)
                 .message("File upload successfully to RustFS")
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.CREATED.name())
                 .payload(fileMetaData)
                 .timestamp(Instant.now()).build();
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -56,3 +56,10 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.parseMediaType(contentType)).body(resource);
     }
 }
+
+
+
+
+
+
+

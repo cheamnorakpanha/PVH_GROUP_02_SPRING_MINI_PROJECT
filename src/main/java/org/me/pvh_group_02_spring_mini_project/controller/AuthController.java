@@ -64,7 +64,7 @@ public class AuthController {
         ApiResponse<AuthResponse> apiResponse = ApiResponse.<AuthResponse>builder()
                 .success(true)
                 .message("Login successful! Authentication token generated.")
-                .status(HttpStatus.OK)
+                .status(HttpStatus.OK.name())
                 .payload(authResponse)
                 .timestamp(Instant.now())
                 .build();
@@ -82,7 +82,7 @@ public class AuthController {
         ApiResponse<AppUserResponse> apiResponse = ApiResponse.<AppUserResponse>builder()
                 .success(true)
                 .message("User registered successfully! Please verify your email to complete the registration.")
-                .status(HttpStatus.CREATED)
+                .status(HttpStatus.CREATED.name())
                 .payload(appUserResponse)
                 .timestamp(Instant.now())
                 .build();
@@ -98,7 +98,7 @@ public class AuthController {
         ApiResponse<AppUser> apiResponse = ApiResponse.<AppUser>builder()
                 .success(true)
                 .message("Email successfully verified! You can now log in")
-                .status(HttpStatus.OK)
+                .status(HttpStatus.OK.name())
                 .payload(null)
                 .timestamp(Instant.now())
                 .build();
@@ -113,7 +113,7 @@ public class AuthController {
             ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
                     .success(true)
                     .message("Verification OTP successfully resent to your email.")
-                    .status(HttpStatus.CREATED)
+                    .status(HttpStatus.CREATED.name())
                     .payload(null)
                     .timestamp(Instant.now())
                     .build();

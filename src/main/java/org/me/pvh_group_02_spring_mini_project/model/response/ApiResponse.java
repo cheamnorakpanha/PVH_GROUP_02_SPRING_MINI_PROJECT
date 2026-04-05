@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
-
 import java.time.Instant;
 
 @Data
@@ -17,7 +15,8 @@ import java.time.Instant;
 public class ApiResponse <T> {
     private boolean success;
     private String message;
-    private HttpStatus status;
+    private String status;
     private T payload;
     private Instant timestamp;
 }
+
