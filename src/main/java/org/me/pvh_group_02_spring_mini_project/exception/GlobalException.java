@@ -53,12 +53,15 @@ public class GlobalException {
     }
 
     @ExceptionHandler(DuplicateUserException.class)
-    public ProblemDetail handleDuplicateUser(DuplicateUserException e) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
-        problemDetail.setTitle("Conflict");
-        problemDetail.setType(URI.create("http://localhost:8080/errors/duplicate-user"));
-        problemDetail.setProperty("timestamp", Instant.now());
-        return problemDetail;
+    public ResponseEntity<Map<String, Object>> handleDuplicateUser(DuplicateUserException e, HttpServletRequest request) {
+        Map<String, Object> error = new LinkedHashMap<>();
+        error.put("type", "about:blank");
+        error.put("title", "Conflict");
+        error.put("status", 409);
+        error.put("detail", e.getMessage());
+        error.put("instance", request.getRequestURI());
+        error.put("timestamp", Instant.now());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
     @ExceptionHandler(BadRequestException.class)
@@ -68,7 +71,13 @@ public class GlobalException {
         error.put("title", "Bad Request");
         error.put("status", 400);
         error.put("instance", request.getRequestURI());
-        error.put("errors", b.getErrors());
+
+        if (b.getErrors() != null && !b.getErrors().isEmpty()) {
+            error.put("errors", b.getErrors());
+        } else {
+            error.put("detail", b.getMessage());
+        }
+
         error.put("timestamp", Instant.now());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
