@@ -14,30 +14,28 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.net.URI;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalException {
+
     @ExceptionHandler(NotFoundException.class)
     public ProblemDetail handleNotFoundException(NotFoundException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
-        problemDetail.setType(URI.create("http://localhost:8090/errors/not-found"));
+        problemDetail.setType(URI.create("http://localhost:8080/errors/not-found"));
         problemDetail.setProperty("timestamp", Instant.now());
         return problemDetail;
     }
-    // Handle validation errors
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setTitle("Bad Request");
-
-        // Collect field validation errors
         Map<String, String> errors = new HashMap<>();
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errors.put(fieldError.getField(), fieldError.getDefaultMessage());
         }
-
-        // Add errors to ProblemDetail as extra properties
         problemDetail.setProperty("errors", errors);
         return problemDetail;
     }
@@ -46,37 +44,23 @@ public class GlobalException {
     public ProblemDetail handleDuplicateUser(DuplicateUserException e) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
         problemDetail.setTitle("Conflict");
-        problemDetail.setType(URI.create("http://localhost:8090/errors/duplicate-user"));
+        problemDetail.setType(URI.create("http://localhost:8080/errors/duplicate-user"));
         problemDetail.setProperty("timestamp", Instant.now());
         return problemDetail;
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ProblemDetail handleBadRequestException(BadRequestException b) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        Map<String, String> errors = new HashMap<>();
-        errors.put("detail", b.getMessage());
-        problemDetail.setProperty("type", "about:blank");
-        problemDetail.setTitle("Bad Request");
-        problemDetail.setDetail(b.getMessage());
-//        problemDetail.setProperty("errors", errors);
-        problemDetail.setProperty("timestamp", Instant.now());
-        return problemDetail;
+    public ResponseEntity<Map<String, Object>> handleBadRequestException(BadRequestException b, HttpServletRequest request) {
+        Map<String, Object> error = new LinkedHashMap<>();
+        error.put("type", "about:blank");
+        error.put("title", "Bad Request");
+        error.put("status", 400);
+        error.put("detail", b.getMessage());
+        error.put("instance", request.getRequestURI());
+        error.put("timestamp", Instant.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-//    @ExceptionHandler(BadRequestException.class)
-//    public ResponseEntity<ApiResponse<Void>> handleBadRequestException(BadRequestException e) {
-//        ApiResponse<Void> response = ApiResponse.<Void>builder()
-//                .success(false)
-//                .message(e.getMessage())
-//                .status(HttpStatus.BAD_REQUEST)
-//                .payload(null)
-//                .timestamp(Instant.now())
-//                .build();
-//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-//    }
-
-    //Handle Exception for FileNotFound
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex, HttpServletRequest request) {
         ErrorResponse error = ErrorResponse.builder()
@@ -85,8 +69,6 @@ public class GlobalException {
                 .message("Authentication required or token is invalid")
                 .path("/error")
                 .build();
-
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 }
-
